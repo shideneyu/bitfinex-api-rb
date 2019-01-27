@@ -1,11 +1,11 @@
 require 'faraday'
 
 module Bitfinex
-  class ClientError < Exception; end
+  class ClientError < StandardError; end
   class ParamsError < ClientError; end
   class InvalidAuthKeyError < ClientError; end
   class BlockMissingError < ParamsError; end
-  class ServerError < Exception; end # Error reported back by Binfinex server
+  class ServerError < StandardError; end # Error reported back by Binfinex server
   class ConnectionClosed < Exception; end
   class BadRequestError < ServerError; end
   class NotFoundError < ServerError; end
@@ -24,9 +24,9 @@ module Bitfinex
       when 403
         raise ForbiddenError, env.body['message']
       when 404
-        raise NotFoundError, env.body['message']
+        raise NotFoundError, env.url
       when 500
-        raise InternalServerError, env.body['message']
+        raise InternalServerError, env.body
       else
         super
       end
